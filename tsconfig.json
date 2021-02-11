@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "emitDecoratorMetadata": true,
+        "esModuleInterop": true,
+        "experimentalDecorators": true,
+        "lib": ["ESNext"],
+        "module": "CommonJS",
+        "moduleResolution": "node",
+        "outDir": "dist",
+        "sourceMap": true,
+        "target": "esnext",
+        "rootDir": "./src"
+    },
+    "include": [
+        "src/**/*.ts",
+        "declarations.d.ts"
+    ],
+    "exclude": [
+        "node_modules/**/*",
+        "**/*.test.ts",
+        ".serverless/**/*",
+        ".vscode/**/*"
+    ]
+}
