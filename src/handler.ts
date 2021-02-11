@@ -6,6 +6,7 @@ import {
     mergeTypeDefs,
     mergeResolvers,
 } from "graphql-tools";
+import { Database } from "./db/Database";
 
 const apolloServer = () => {
     const graphqlTypes = loadFilesSync(path.join(__dirname, "schema.graphql"));
@@ -42,6 +43,9 @@ const runHandler = (event, context, handler) =>
     });
 
 exports.graphqHandler = async (event, context) => {
+    const database = new Database();
+    await database.getConnection();
+
     const server = apolloServer();
     const handler = server.createHandler({
         cors: { credentials: true, origin: "*" },
@@ -53,6 +57,6 @@ exports.graphqHandler = async (event, context) => {
     };
 
     const response = await runHandler(event, context, handler);
-    // disable db connection here in future
+    await database.closeConnection();
     return response;
 };

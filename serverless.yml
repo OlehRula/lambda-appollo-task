@@ -7,6 +7,13 @@ provider:
   timeout: 15
   stage: dev
   region: eu-central-1
+  vpc:
+    securityGroupIds:
+      - sg-c73512bf
+    subnetIds:
+      - subnet-93a853ef
+      - subnet-82139ee8
+      - subnet-78a56b34
 
 functions:
   graphqlCharacters:
@@ -25,6 +32,23 @@ functions:
           method: get
           cors: true
 
+resources:
+  Resources:
+    AWSLambdaVPCAccessExecutionRole:
+      Type: AWS::IAM::ManagedPolicy
+      Properties:
+        Description: Creating policy for vpc connetion.
+        Roles:
+          - {"Ref" : "IamRoleLambdaExecution"}
+        PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+                - ec2:CreateNetworkInterface
+                - ec2:DescribeNetworkInterfaces
+                - ec2:DeleteNetworkInterface
+              Resource: "*"
 
 plugins:
   - serverless-dotenv-plugin
