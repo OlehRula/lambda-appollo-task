@@ -5,7 +5,22 @@ import { Episodes } from "../episodes/episodes.entity";
 import Charater from "../../interfaces/character.interface";
 
 export default {
-    Query: {},
+    Query: {
+        getCharacters: async (
+            _: unknown,
+            { limit = 10, offset = 0 }: { limit: number; offset: number }
+        ): Promise<Characters[]> =>
+            Characters.find({
+                take: limit,
+                skip: offset,
+                relations: ["episodes"],
+            }),
+        getCharacter: async (_, { name }: { name: string }): Promise<Characters> =>
+            Characters.findOne({
+                relations: ["episodes"],
+                where: { name },
+            }),
+    },
     Mutation: {
         addCharacter: async (
             _: unknown, 

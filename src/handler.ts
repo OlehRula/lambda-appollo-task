@@ -18,7 +18,6 @@ const apolloServer = () => {
         typeDefs: mergeTypeDefs(graphqlTypes),
         resolvers: mergeResolvers(graphqlResolvers),
     });
-
     return new ApolloServer({
         schema: graphqlSchema,
         context: async ({ context = {}, event }) => {
@@ -42,7 +41,7 @@ const runHandler = (event, context, handler) =>
         handler(event, context, callback);
     });
 
-exports.graphqHandler = async (event, context) => {
+exports.graphqlHandler = async (event, context) => {
     const database = new Database();
     await database.getConnection();
 
@@ -52,10 +51,9 @@ exports.graphqHandler = async (event, context) => {
     });
     event.httpMethod = event.httpMethod || "POST";
     event.headers = {
-        "Content-Type": "application/json",
+        "content-type": "application/json",
         ...(event.headers || {}),
     };
-
     const response = await runHandler(event, context, handler);
     await database.closeConnection();
     return response;

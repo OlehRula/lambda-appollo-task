@@ -9,6 +9,7 @@ import { initTestSchema } from "../utils/initTestSchema";
 import { asyncForEach } from "../utils/index";
 
 it("graphqlHandler should be a function", async () => {
+    console.log(graphqlHandler)
     expect(typeof graphqlHandler).toBe("function");
 });
 
@@ -193,6 +194,58 @@ describe("Apollo Server", () => {
                 errors: [error],
             } = await mutate({ mutation: UPDATE_CHARACTER });
             expect(error.message).toBe("newCharacter2 is not exist.");
+        });
+    });
+
+    describe("Query", () => {
+        it("getCharacters: get list", async () => {
+            const GET_CHARACTERS = gql`
+                query {
+                    getCharacters {
+                        name
+                        episodes {
+                            name
+                        }
+                        planet
+                    }
+                }
+            `;
+
+            const {
+                data: { getCharacters },
+            } = await query({ query: GET_CHARACTERS });
+            expect(getCharacters).toBeInstanceOf(Array);
+            expect(getCharacters).toEqual([{
+                name: "newCharacter1",
+                episodes: [{ name: "episode2" }, { name: "episode3" }],
+                planet: "updated",
+            }]);
+        });
+
+        it("getCharacter: get single character", async () => {
+            const GET_CHARACTER = gql`
+                query {
+                    getCharacter(name: "newCharacter1") {
+                        name
+                        episodes {
+                            name
+                        }
+                        planet
+                    }
+                }
+            `;
+
+            const {
+                data: { getCharacter },
+                errors
+            } = await query({ query: GET_CHARACTER });
+            expect(typeof getCharacter).toBe("object");
+            expect(getCharacter).not.toBeInstanceOf(Array);
+            expect(getCharacter).toEqual({
+                name: "newCharacter1",
+                episodes: [{ name: "episode2" }, { name: "episode3" }],
+                planet: "updated",
+            });
         });
     });
 });
