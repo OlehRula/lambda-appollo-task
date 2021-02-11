@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "rm -rf dist && tsc && graphql-schema-utilities -s \"src/controllers/**/*.graphql\" -o \"./dist/schema.graphql\" && jest --watchAll",
+    "dev": "npx eslint src && rm -rf dist && tsc && graphql-schema-utilities -s \"src/controllers/**/*.graphql\" -o \"./dist/schema.graphql\" && SLS_DEBUG=* sls offline start",
+    "deploy": "sls deploy --env staging"
   },
   "repository": {
     "type": "git",
