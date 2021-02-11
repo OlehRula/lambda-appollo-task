@@ -1,0 +1,35 @@
+service: graphql-codepepper
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  memorySize: 2048
+  timeout: 15
+  stage: dev
+  region: eu-central-1
+
+functions:
+  graphqlCharacters:
+    handler: dist/handler.graphqlHandler
+    events:
+      - http:
+          path: graphql
+          method: post
+          cors: true
+      - http:
+          path: graphql
+          method: get
+          cors: true
+      - http:
+          path: playground
+          method: get
+          cors: true
+
+
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    useChildProcesses: true
